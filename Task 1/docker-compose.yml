@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  cfg1n1:
+    container_name: cfg1n1
+    image: mongo:5.0.0
+    restart: on-failure
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/cfg1n1:/data/db
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+  cfg1n2:
+    container_name: cfg1n2
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/cfg1n2:/data/db
+  cfg1n3:
+    container_name: cfg1n3
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/cfg1n3:/data/db
+  shrd1n1:
+    container_name: shrd1n1
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd1rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd1n1:/data/db
+  shrd1n2:
+    container_name: shrd1n2
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd1rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd1n2:/data/db
+  shrd1n3:
+    container_name: shrd1n3
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd1rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd1n3:/data/db
+  shrd2n1:
+    container_name: shrd2n1
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd2rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd2n1:/data/db
+  shrd2n2:
+    container_name: shrd2n2
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd2rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd2n2:/data/db
+  shrd2n3:
+    container_name: shrd2n3
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd2rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd2n3:/data/db
+  shrd3n1:
+    container_name: shrd3n1
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd3rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd3n1:/data/db
+  shrd3n2:
+    container_name: shrd3n2
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd3rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd3n2:/data/db
+  shrd3n3:
+    container_name: shrd3n3
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd3rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd3n3:/data/db
+  shrd4n1:
+    container_name: shrd4n1
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd4rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd4n1:/data/db
+  shrd4n2:
+    container_name: shrd4n2
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd4rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd4n2:/data/db
+  shrd4n3:
+    container_name: shrd4n3
+    image: mongo:5.0.0
+    restart: on-failure
+    command: mongod --shardsvr --replSet shrd4rs --port 27017 --dbpath /data/db --keyFile /auth/secret.key
+    volumes:
+      - ./secret.key:/auth/secret.key
+      - ./data/shrd4n3:/data/db
+  mongos:
+    container_name: mongos
+    image: mongo:5.0.0
+    restart: on-failure
+    depends_on:
+      - cfg1n1
+      - cfg1n2
+      - cfg1n3
+    ports:
+      - "37017:27017"
+    volumes:
+      - ./secret.key:/auth/secret.key
+    command: mongos --configdb cfgrs/cfg1n1:27017,cfg1n2:27017,cfg1n3:27017 --bind_ip 0.0.0.0 --port 27017 --keyFile /auth/secret.key
+
+volumes:
+  cfg1n1:
+    driver: local
+  cfg1n2:
+    driver: local
+  cfg1n3:
+    driver: local
+  shrd1n1:
+    driver: local
+  shrd1n2:
+    driver: local
+  shrd1n3:
+    driver: local
+  shrd2n1:
+    driver: local
+  shrd2n2:
+    driver: local
+  shrd2n3:
+    driver: local
+  shrd3n1:
+    driver: local
+  shrd3n2:
+    driver: local
+  shrd3n3:
+    driver: local
+  shrd4n1:
+    driver: local
+  shrd4n2:
+    driver: local
+  shrd4n3:
+    driver: local
